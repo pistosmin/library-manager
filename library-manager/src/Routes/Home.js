@@ -13,7 +13,9 @@ function Home() {
     // const data = await response.collection("books").get();
     data.docs.forEach((item) => {
       console.log(item.id, " => ", item.data());
+      //TODO: setBooks 한번에 설정하도록
       setBooks([...books, item.data()]);
+      setBooks([...books, { id: item.id }]);
     });
   };
 
@@ -25,9 +27,10 @@ function Home() {
     <div className="App">
       <h1>Home</h1>
       {books.map((book) => {
+        console.log("test " + book.id);
         return (
-          <div className="blog-container">
-            <h4 key="{book.title}">{book.title}</h4>
+          <div key="{book.id}" className="books-container">
+            <h4>{book.title}</h4>
           </div>
         );
       })}

@@ -9,6 +9,7 @@ import Home from "Routes/Home";
 import Search from "Routes/Search";
 import Detail from "Routes/Detail";
 import Mypage from "Routes/Mypage";
+import Admin from "Routes/Admin";
 
 import { useStateValue } from "./StateProvider";
 import { auth } from "./Firebase";
@@ -40,6 +41,7 @@ const Routers = () => {
         <Route path="/search" component={Search} />
         <Route path="/detail" component={Detail} />
         <Route path="/mypage" component={Mypage} />
+        <Route path="/admin" component={Admin} />
         <Redirect from="*" to="/" />
       </Switch>
     </Router>

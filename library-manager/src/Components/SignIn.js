@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -13,21 +13,12 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link
-        color="inherit"
-        href="https://github.com/pistosmin/library-manager/"
-      >
-        Library Manager
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import { useStateValue } from "./StateProvider";
+import { auth, provider } from "./Firebase";
+import { actionTypes } from "./reducer";
+import Home from "Routes/Home";
+import SignUp from "./SignUp";
+import Copyright from "./Copyright";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -52,6 +43,46 @@ const useStyles = makeStyles((theme) => ({
 function SignIn() {
   const classes = useStyles();
 
+  const [{ user }, dispatch] = useStateValue();
+  //console.log(user);
+  const [signUp, setSignUp] = useState(false);
+  const signInWithGoogle = (user_id, user_password) => {
+    //로그인 로직 넣기
+    //console.log(user_id, user_password);
+    auth
+      .signInWithPopup(provider)
+      .then((result) => {
+        dispatch({
+          type: actionTypes.SET_USER,
+          user: result.user,
+        });
+        //console.log(result.user);
+      })
+      .catch((error) => console.log(error.message));
+  };
+
+  const onSubmit = (user_id, user_password) => {
+    //로그인 로직 넣기
+    auth
+      .signInWithEmailAndPassword(user_id, user_password)
+      .then((result) => {
+        dispatch({
+          type: actionTypes.SET_USER,
+          user: result.user,
+        });
+        //console.log(user_id, user_password);
+      })
+      .catch((error) => alert(error.message));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const user_id = e.target.email.value;
+    const user_password = e.target.password.value;
+    //로그인 로직 넣기
+    onSubmit(user_id, user_password);
+  };
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -62,7 +93,7 @@ function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -97,6 +128,16 @@ function SignIn() {
             className={classes.submit}
           >
             Sign In
+          </Button>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            onClick={signInWithGoogle}
+          >
+            Sign In With Google
           </Button>
           <Grid container>
             <Grid item xs>

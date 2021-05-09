@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import firebase from "firebase/app";
 import { auth, firestore } from "Components/firebase.config";
+import Navigation from "Components/Navigation";
 
 function Home() {
   const [books, setBooks] = useState([]);
@@ -25,6 +26,7 @@ function Home() {
 
   return (
     <div className="App">
+      <Navigation />
       <h1>Home</h1>
       {books.map((book) => {
         console.log("test " + book.id);
